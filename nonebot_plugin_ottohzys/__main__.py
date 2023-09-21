@@ -66,7 +66,7 @@ async def _(matcher: Matcher, args: Namespace = ShellCommandArgs()):
     speed: float = args.speed
     pitch: float = args.pitch
     ysdd: bool = args.ysdd
-    sentence = " ".join(str(x) for x in args.sentence)
+    sentence = " ".join(str(x) for x in args.sentence).strip()
 
     if speed < 0.5:
         await matcher.finish(TIP_TOO_EXTREME)

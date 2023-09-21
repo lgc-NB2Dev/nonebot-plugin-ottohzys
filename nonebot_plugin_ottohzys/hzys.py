@@ -131,7 +131,7 @@ async def parse_sentence(sentence: str, ysdd_mode: bool = True) -> List[PreProcP
         tmp: List[PreProcPron] = []
 
         for pron in pre_proc_pron:
-            if pron.is_pinyin or (kw not in pron.pron):
+            if (kw not in pron.pron) or pron.is_pinyin or pron.is_ysdd:
                 tmp.append(pron)
             else:
                 splitted = [
@@ -145,12 +145,9 @@ async def parse_sentence(sentence: str, ysdd_mode: bool = True) -> List[PreProcP
 
     # 替换原声大碟
     if ysdd_mode:
-        ysdd_token_list = [(k, y) for k, x in YSDD_TOKEN_MAP.items() for y in x]
-        for ysdd_token, ysdd_sentence in ysdd_token_list:
-            pre_proc_pron = replace_pron(
-                ysdd_sentence,
-                PreProcPron(ysdd_token, is_ysdd=True),
-            )
+        for token, sentences in YSDD_TOKEN_MAP.items():
+            for s in sentences:
+                pre_proc_pron = replace_pron(s, PreProcPron(token, is_ysdd=True))
 
     # 替换字母
     for ch, pron in CHINGLISH_MAP.items():
@@ -185,7 +182,7 @@ async def generate_data(
 ) -> SoundArrayType:
     """活字印刷"""
 
-    sentence = sentence.lower().strip()
+    sentence = sentence.lower()
     tokens_list = await parse_sentence(sentence, ysdd_mode)
 
     processed_au: SoundArrayType = np.array([])
