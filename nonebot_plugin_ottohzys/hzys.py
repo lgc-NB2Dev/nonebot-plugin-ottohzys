@@ -1,6 +1,5 @@
 # Original by: https://github.com/CwavGuy/HUOZI_aolianfeiallin.top/blob/main/huoZiYinShua.py
 
-import string
 from dataclasses import dataclass
 from io import BytesIO
 from pathlib import Path
@@ -128,7 +127,7 @@ async def parse_sentence(sentence: str, ysdd_mode: bool = True) -> List[PreProcP
     pre_proc_pron: List[PreProcPron] = []
     pre_proc_pron.append(PreProcPron(sentence))
 
-    def replace_pron(kw: str, replace_to: PreProcPron) -> List[PreProcPron]:
+    def replace_pron(kw: str, *replace_to: PreProcPron) -> List[PreProcPron]:
         tmp: List[PreProcPron] = []
 
         for pron in pre_proc_pron:
@@ -136,7 +135,7 @@ async def parse_sentence(sentence: str, ysdd_mode: bool = True) -> List[PreProcP
                 tmp.append(pron)
             else:
                 splitted = [
-                    ([replace_to, PreProcPron(s)] if n else [PreProcPron(s)])
+                    ([*replace_to, PreProcPron(s)] if n else [PreProcPron(s)])
                     for n, s in (enumerate(pron.pron.split(kw)))
                 ]
                 flattened = [y for x in splitted for y in x if y.pron]
@@ -150,22 +149,29 @@ async def parse_sentence(sentence: str, ysdd_mode: bool = True) -> List[PreProcP
         for ysdd_token, ysdd_sentence in ysdd_token_list:
             pre_proc_pron = replace_pron(
                 ysdd_sentence,
-                PreProcPron(ysdd_token, is_pinyin=True, is_ysdd=True),
+                PreProcPron(ysdd_token, is_ysdd=True),
             )
 
     # 替换字母
     for ch, pron in CHINGLISH_MAP.items():
-        pre_proc_pron = replace_pron(ch, PreProcPron(pron, is_pinyin=True))
+        pre_proc_pron = replace_pron(
+            ch,
+            *(PreProcPron(pron, is_pinyin=True) for pron in pron.split()),
+        )
 
     # 拼音化
-    for pron in (x for x in pre_proc_pron if (not x.is_ysdd) and (not x.is_pinyin)):
-        pron.pron = " ".join(lazy_pinyin(pron.pron))
-
-    # 分割空格
     ret = []
     for pron in pre_proc_pron:
-        for p in pron.pron.split():
-            ret.append(PreProcPron(p, is_pinyin=True, is_ysdd=pron.is_ysdd))
+        if pron.is_ysdd or pron.is_pinyin:
+            ret.append(pron)
+            continue
+
+        for p in lazy_pinyin(pron.pron):
+            if p.isalpha():
+                ret.append(PreProcPron(p, is_pinyin=True))
+            else:
+                ret.extend(PreProcPron("_", is_pinyin=True) for _ in p)
+
     return ret
 
 
@@ -179,9 +185,7 @@ async def generate_data(
 ) -> SoundArrayType:
     """活字印刷"""
 
-    sentence = sentence.lower()
-    for c in string.whitespace:
-        sentence = sentence.replace(c, "_")
+    sentence = sentence.lower().strip()
     tokens_list = await parse_sentence(sentence, ysdd_mode)
 
     processed_au: SoundArrayType = np.array([])
