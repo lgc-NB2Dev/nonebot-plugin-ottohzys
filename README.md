@@ -10,52 +10,39 @@
   <img src="https://raw.githubusercontent.com/A-kirami/nonebot-plugin-template/resources/NoneBotPlugin.svg" width="240" alt="NoneBotPluginText">
 </p>
 
-# nonebot-plugin-example
+# NoneBot-Plugin-ottoHzys
 
-_✨ NoneBot 插件简单描述 ✨_
+_♿ 大电老师活字印刷 ♿_
 
 <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="python">
 <a href="https://pdm.fming.dev">
   <img src="https://img.shields.io/badge/pdm-managed-blueviolet" alt="pdm-managed">
 </a>
-<a href="https://wakatime.com/badge/user/b61b0f9a-f40b-4c82-bc51-0a75c67bfccf/project/f4778875-45a4-4688-8e1b-b8c844440abb">
-  <img src="https://wakatime.com/badge/user/b61b0f9a-f40b-4c82-bc51-0a75c67bfccf/project/f4778875-45a4-4688-8e1b-b8c844440abb.svg" alt="wakatime">
+<a href="https://wakatime.com/badge/user/b61b0f9a-f40b-4c82-bc51-0a75c67bfccf/project/897d1918-c2d7-4e7c-b84c-b33ba640cbf2">
+  <img src="https://wakatime.com/badge/user/b61b0f9a-f40b-4c82-bc51-0a75c67bfccf/project/897d1918-c2d7-4e7c-b84c-b33ba640cbf2.svg" alt="wakatime">
 </a>
 
 <br />
 
 <a href="./LICENSE">
-  <img src="https://img.shields.io/github/license/owner/nonebot-plugin-example.svg" alt="license">
+  <img src="https://img.shields.io/github/license/lgc-NB2Dev/nonebot-plugin-ottohzys.svg" alt="license">
 </a>
-<a href="https://pypi.python.org/pypi/nonebot-plugin-example">
-  <img src="https://img.shields.io/pypi/v/nonebot-plugin-example.svg" alt="pypi">
+<a href="https://pypi.python.org/pypi/nonebot-plugin-ottohzys">
+  <img src="https://img.shields.io/pypi/v/nonebot-plugin-ottohzys.svg" alt="pypi">
 </a>
-<a href="https://pypi.python.org/pypi/nonebot-plugin-example">
-  <img src="https://img.shields.io/pypi/dm/nonebot-plugin-example" alt="pypi download">
+<a href="https://pypi.python.org/pypi/nonebot-plugin-ottohzys">
+  <img src="https://img.shields.io/pypi/dm/nonebot-plugin-ottohzys" alt="pypi download">
 </a>
 
 </div>
 
-这是一个 nonebot2 插件项目的模板库, 你可以直接使用本模板创建你的 nonebot2 插件项目的仓库
-
-模板库使用方法:
-
-1. 点击仓库中的 `Use this template` 按钮, 输入仓库名与描述, 点击 `Create repository from template` 创建仓库
-2. 全局替换 `owner` 为仓库所有者 ID;  
-   全局替换 `nonebot-plugin-example` 为插件名;  
-   全局替换 `nonebot_plugin_example` 为包名;  
-   修改 python 徽标中的版本为你插件的运行所需版本;  
-   替换 WakaTime 的徽标
-3. 修改 `README.md` 中的插件名和插件描述, 并在下方填充相应的内容
-4. 使用 `pdm` 安装工作区依赖
-   ```shell
-   pdm install
-   pdm install --group dev
-   ```
-
 ## 📖 介绍
 
-这里是插件的详细介绍部分
+### 前言
+
+由于我不是很了解抽象文化，不逛贴吧，所以本插件纯度可能不是很够，有什么问题或者建议可以 [联系我](#-联系)，或者直接 发 Issue！
+
+由于原项目没有放 License，所以我也把本仓库的 License 删掉了，如果原作者有相关意见可以直接联系我。
 
 ## 💿 安装
 
@@ -66,7 +53,7 @@ _✨ NoneBot 插件简单描述 ✨_
 在 nonebot2 项目的根目录下打开命令行, 输入以下指令即可安装
 
 ```bash
-nb plugin install nonebot-plugin-example
+nb plugin install nonebot-plugin-ottohzys
 ```
 
 </details>
@@ -79,7 +66,7 @@ nb plugin install nonebot-plugin-example
 <summary>pip</summary>
 
 ```bash
-pip install nonebot-plugin-example
+pip install nonebot-plugin-ottohzys
 ```
 
 </details>
@@ -87,7 +74,7 @@ pip install nonebot-plugin-example
 <summary>pdm</summary>
 
 ```bash
-pdm add nonebot-plugin-example
+pdm add nonebot-plugin-ottohzys
 ```
 
 </details>
@@ -95,7 +82,7 @@ pdm add nonebot-plugin-example
 <summary>poetry</summary>
 
 ```bash
-poetry add nonebot-plugin-example
+poetry add nonebot-plugin-ottohzys
 ```
 
 </details>
@@ -103,7 +90,7 @@ poetry add nonebot-plugin-example
 <summary>conda</summary>
 
 ```bash
-conda install nonebot-plugin-example
+conda install nonebot-plugin-ottohzys
 ```
 
 </details>
@@ -114,7 +101,7 @@ conda install nonebot-plugin-example
 [tool.nonebot]
 plugins = [
     # ...
-    "nonebot_plugin_example"
+    "nonebot_plugin_ottohzys"
 ]
 ```
 
@@ -131,16 +118,7 @@ plugins = [
 
 ## 🎉 使用
 
-### 指令表
-
-|  指令  | 权限 | 需要@ | 范围 |   说明   |
-| :----: | :--: | :---: | :--: | :------: |
-| 指令 1 | 主人 |  否   | 私聊 | 指令说明 |
-| 指令 2 | 群员 |  是   | 群聊 | 指令说明 |
-
-### 效果图
-
-如果有效果图的话
+使用指令 `ottohzys -h` 查看帮助
 
 ## 📞 联系
 
@@ -151,7 +129,13 @@ Telegram：[@lgc2333](https://t.me/lgc2333)
 
 ## 💡 鸣谢
 
-如果有要鸣谢的人的话
+### [sakaneko117/HUOZI](https://github.com/sakaneko117/HUOZI) & [CwavGuy/HUOZI_aolianfeiallin.top](https://github.com/CwavGuy/HUOZI_aolianfeiallin.top) & [HanaYabuki/otto-hzys](https://github.com/HanaYabuki/otto-hzys)
+
+- 造好的轮子
+
+### [Rouphy](https://github.com/Rouphy)
+
+- 插件点子
 
 ## 💰 赞助
 
