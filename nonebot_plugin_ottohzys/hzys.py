@@ -1,5 +1,6 @@
 # Original by: https://github.com/CwavGuy/HUOZI_aolianfeiallin.top/blob/main/huoZiYinShua.py
 
+import string
 from dataclasses import dataclass
 from io import BytesIO
 from pathlib import Path
@@ -19,15 +20,16 @@ SoundArrayType = NDArray[np.float64]
 
 TARGET_SAMPLE_RATE = 44100
 """目标采样率"""
-EMPTY_AUDIO: SoundArrayType = np.zeros(int(TARGET_SAMPLE_RATE / 4))
 
 audio_cache: Dict[str, SoundArrayType] = {}
 ysdd_audio_cache: Dict[str, SoundArrayType] = {}
 
 
-def normalize_audio(data):
+def normalize_audio(data: SoundArrayType):
     """标准化音频，统一音量"""
     rms = np.sqrt(np.mean(data**2))
+    if rms == 0:
+        return data
     return data / rms * 0.2
 
 
@@ -57,7 +59,11 @@ async def load_audio(file_path: Path):
     return normalize_audio(data)
 
 
-async def get_pinyin_audio(pinyin: str, is_ysdd: bool = False) -> SoundArrayType:
+async def get_pinyin_audio(
+    pinyin: str,
+    is_ysdd: bool = False,
+    empty_length: float = 0.25,
+) -> SoundArrayType:
     cache_dict = ysdd_audio_cache if is_ysdd else audio_cache
     file_dir = YSDD_TOKENS_DIR if is_ysdd else TOKENS_DIR
 
@@ -70,7 +76,7 @@ async def get_pinyin_audio(pinyin: str, is_ysdd: bool = False) -> SoundArrayType
         audio = await load_audio(file_dir / file_name)
     except FileNotFoundError:
         logger.warning(f"Audio {file_name} not found in {file_dir}")
-        return EMPTY_AUDIO.copy()
+        return np.zeros(int(empty_length * TARGET_SAMPLE_RATE))
 
     cache_dict[pinyin] = audio
     return audio
@@ -169,15 +175,18 @@ async def generate_data(
     pitch_multiple: float = 1,
     speed_multiple: float = 1,
     reverse: bool = False,
+    pause_length: float = 0.25,
 ) -> SoundArrayType:
     """活字印刷"""
 
     sentence = sentence.lower()
+    for c in string.whitespace:
+        sentence = sentence.replace(c, "_")
     tokens_list = await parse_sentence(sentence, ysdd_mode)
 
     processed_au: SoundArrayType = np.array([])
     for token in tokens_list:
-        audio = await get_pinyin_audio(token.pron, token.is_ysdd)
+        audio = await get_pinyin_audio(token.pron, token.is_ysdd, pause_length)
         processed_au = np.concatenate((processed_au, audio))
 
     # 音高偏移
@@ -202,6 +211,7 @@ async def generate(
     pitch_multiple: float = 1,
     speed_multiple: float = 1,
     reverse: bool = False,
+    pause_length: float = 0.25,
 ) -> BytesIO:
     data = await generate_data(
         raw_data,
@@ -209,5 +219,6 @@ async def generate(
         pitch_multiple,
         speed_multiple,
         reverse,
+        pause_length,
     )
     return save_to_bytes_io(data)
