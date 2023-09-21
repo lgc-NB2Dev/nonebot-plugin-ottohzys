@@ -87,10 +87,6 @@ def modify_pitch_and_speed(
         # 没有改动的必要，直接返回
         return data
 
-    # elif pitchMultiple > 2 or speedMultiple < 0.5:
-    #     print("过于极端的音调和速度参数可能导致输出结果与预期不符，故不作改动")
-    #     return data
-
     # 第一次拉伸
     if speed_multiple / pitch_multiple != 1:
         # 不改变音高的同时在时间上拉伸（PSOLA）
