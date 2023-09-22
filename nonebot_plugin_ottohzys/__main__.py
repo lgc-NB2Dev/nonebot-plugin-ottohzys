@@ -44,7 +44,7 @@ cmd_otto_parser.add_argument(
     "--pause",
     "-P",
     type=float,
-    help="空格等字符的停顿时间，单位秒，默认 0.5",
+    help="空格等字符的停顿时间，单位秒，默认 0.25",
     default=0.25,
 )
 cmd_otto_parser.add_argument("sentence", nargs="*", help="要生成语音的文本")
