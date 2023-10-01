@@ -7,42 +7,51 @@ from nonebot.rule import ArgumentParser, Namespace
 
 from .hzys import generate
 
-COMMANDS = ("ottohzys", "otto活字印刷", "otto鬼叫", "电棍hzys", "电棍活字印刷", "电棍鬼叫")
+CMD_PREFIXES = ("otto", "电棍", "大电老师")
+CMD_SUFFIXES = ("活字印刷", "鬼叫", "hzys")
+COMMANDS = [f"{prefix}{suffix}" for prefix in CMD_PREFIXES for suffix in CMD_SUFFIXES]
 CMD_PRIMARY, *CMD_ALIAS = COMMANDS
 
 
 cmd_otto_parser = ArgumentParser(CMD_PRIMARY, add_help=False)
 cmd_otto_parser.add_argument(
-    "--reverse",
     "-r",
+    "--reverse",
     action="store_true",
     help="是否倒放",
     default=False,
 )
 cmd_otto_parser.add_argument(
-    "--speed",
-    "-s",
-    type=float,
-    help="语音速度，范围 >= 0.5，默认 1.0，越小速度越快",
-    default=1.0,
-)
-cmd_otto_parser.add_argument(
-    "--pitch",
-    "-p",
-    type=float,
-    help="语音音调，范围 0 < pitch < 2，默认 1.0，越小音调越低",
-    default=1.0,
-)
-cmd_otto_parser.add_argument(
-    "--ysdd",
-    "-y",
-    action="store_false",
+    "-Y",
+    "--no-ysdd",
+    action="store_true",
     help="特定语句是否 不使用 原声大碟",
-    default=True,
+    default=False,
 )
 cmd_otto_parser.add_argument(
-    "--pause",
+    "-N",
+    "--no-normalize",
+    action="store_true",
+    help="是否 不使用 自动音量归一化",
+    default=False,
+)
+cmd_otto_parser.add_argument(
+    "-s",
+    "--speed",
+    type=float,
+    help="语音速度，范围 >= 0.5，默认 1.0，越小速度越慢",
+    default=1.0,
+)
+cmd_otto_parser.add_argument(
+    "-p",
+    "--pitch",
+    type=float,
+    help="语音音调，范围 0 < pitch <= 2，默认 1.0，越大音调越高",
+    default=1.0,
+)
+cmd_otto_parser.add_argument(
     "-P",
+    "--pause",
     type=float,
     help="空格等字符的停顿时间，单位秒，默认 0.25",
     default=0.25,
@@ -62,21 +71,31 @@ async def _(matcher: Matcher, err: ParserExit = ShellCommandArgs()):
 
 @cmd_otto.handle()
 async def _(matcher: Matcher, args: Namespace = ShellCommandArgs()):
+    sentence = " ".join(str(x) for x in args.sentence).strip()
     reverse: bool = args.reverse
+    ysdd: bool = not args.no_ysdd
+    normalize: bool = not args.no_normalize
     speed: float = args.speed
     pitch: float = args.pitch
-    ysdd: bool = args.ysdd
-    sentence = " ".join(str(x) for x in args.sentence).strip()
+    pause: float = args.pause
 
     if speed < 0.5:
         await matcher.finish(TIP_TOO_EXTREME)
-    if not 0 < pitch < 2:
+    if not 0 < pitch <= 2:
         await matcher.finish(TIP_TOO_EXTREME)
     if not sentence:
         await matcher.finish(HELP)
 
     try:
-        voice = await generate(sentence, ysdd, speed, pitch, reverse)
+        voice = await generate(
+            sentence=sentence,
+            reverse=reverse,
+            ysdd_mode=ysdd,
+            normalize=normalize,
+            speed_multiple=speed,
+            pitch_multiple=pitch,
+            pause_length=pause,
+        )
     except Exception:
         logger.exception("Failed to generate voice")
         await matcher.finish("生成语音失败")

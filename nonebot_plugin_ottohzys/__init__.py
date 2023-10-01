@@ -3,7 +3,7 @@ from nonebot.plugin import PluginMetadata
 from . import __main__ as __main__
 from .config import ConfigModel
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __plugin_meta__ = PluginMetadata(
     name="大电老师活字印刷",
     description="大家好啊，今天来点大家想看的东西",
