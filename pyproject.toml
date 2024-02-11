@@ -11,7 +11,7 @@ dependencies = [
     "numpy>=1.24.4",
     "pypinyin>=0.49.0",
     "psola>=0.0.1",
-    "anyio>=3.7.1",
+    "anyio>=3.6.2",
     "httpx>=0.25.0",
     "async-lru>=2.0.4",
 ]
