@@ -1,4 +1,4 @@
-from nonebot import get_driver
+from nonebot import get_plugin_config
 from pydantic import BaseModel
 
 
@@ -6,4 +6,4 @@ class ConfigModel(BaseModel):
     pass
 
 
-config: ConfigModel = ConfigModel.parse_obj(get_driver().config.dict())
+config: ConfigModel = get_plugin_config(ConfigModel)

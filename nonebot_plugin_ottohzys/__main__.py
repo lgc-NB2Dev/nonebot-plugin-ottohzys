@@ -1,9 +1,9 @@
 from nonebot import logger, on_shell_command
-from nonebot.adapters.onebot.v11 import MessageSegment
 from nonebot.exception import ParserExit
 from nonebot.matcher import Matcher
 from nonebot.params import ShellCommandArgs
 from nonebot.rule import ArgumentParser, Namespace
+from nonebot_plugin_alconna.uniseg import UniMessage
 
 from .hzys import generate
 
@@ -100,4 +100,4 @@ async def _(matcher: Matcher, args: Namespace = ShellCommandArgs()):
         logger.exception("Failed to generate voice")
         await matcher.finish("生成语音失败")
 
-    await matcher.finish(MessageSegment.record(voice))
+    await UniMessage.voice(raw=voice).send()
