@@ -5,7 +5,7 @@ description = "otto!"
 authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
 dependencies = [
     "nonebot2>=2.2.0",
-    "nonebot-plugin-alconna>=0.40.0rc1",
+    "nonebot-plugin-alconna>=0.40.1",
     "soundfile>=0.12.1",
     "numpy>=1.24.4",
     "pypinyin>=0.49.0",
