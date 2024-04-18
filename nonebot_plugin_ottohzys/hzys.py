@@ -15,7 +15,7 @@ from nonebot import logger
 from numpy.typing import NDArray
 from pypinyin import lazy_pinyin
 
-from .resource import CHINGLISH_MAP, TOKENS_DIR, YSDD_TOKEN_MAP, YSDD_TOKENS_DIR
+from .resource import TOKENS_DIR, YSDD_TOKENS_DIR, get_chinglish_map, get_ysdd_token_map
 
 SoundArrayType = NDArray[np.float64]
 
@@ -141,12 +141,14 @@ async def parse_sentence(sentence: str, ysdd_mode: bool = True) -> List[PreProcP
 
     # 替换原声大碟
     if ysdd_mode:
-        for token, sentences in YSDD_TOKEN_MAP.items():
+        ysdd_token_map = get_ysdd_token_map()
+        for token, sentences in ysdd_token_map.items():
             for s in sentences:
                 pre_proc_pron = replace_pron(s, PreProcPron(token, is_ysdd=True))
 
     # 替换字母
-    for ch, pron in CHINGLISH_MAP.items():
+    chinglish_map = get_chinglish_map()
+    for ch, pron in chinglish_map.items():
         pre_proc_pron = replace_pron(
             ch,
             *(PreProcPron(pron, is_pinyin=True) for pron in pron.split()),

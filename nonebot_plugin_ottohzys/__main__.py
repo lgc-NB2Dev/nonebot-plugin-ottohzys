@@ -71,6 +71,9 @@ async def _(matcher: Matcher, err: ParserExit = ShellCommandArgs()):
 
 @cmd_otto.handle()
 async def _(matcher: Matcher, args: Namespace = ShellCommandArgs()):
+    # if not check_resource_sync():
+    #     await matcher.finish("未找到需要的资源文件，请检查")
+
     sentence = " ".join(str(x) for x in args.sentence).strip()
     reverse: bool = args.reverse
     ysdd: bool = not args.no_ysdd
