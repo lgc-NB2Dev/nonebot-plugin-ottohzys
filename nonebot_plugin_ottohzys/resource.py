@@ -20,7 +20,7 @@ YSDD_TOKEN_MAP_PATH = RESOURCE_DIR / "ysdd.json"
 BUILTIN_RES_DIR = Path(__file__).parent / "res"
 CHINGLISH_MAP_PATH = BUILTIN_RES_DIR / "chinglish.json"
 
-RESOURCE_REPO_URL = "https://hub.gitmirror.com/https://github.com/HanaYabuki/otto-hzys/archive/refs/heads/master.zip"
+RESOURCE_REPO_URL = "https://mirror.ghproxy.com/https://github.com/HanaYabuki/otto-hzys/archive/refs/heads/master.zip"
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
 
