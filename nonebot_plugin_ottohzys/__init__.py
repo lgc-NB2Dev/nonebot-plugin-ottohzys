@@ -14,5 +14,5 @@ __plugin_meta__ = PluginMetadata(
     homepage="https://github.com/lgc-NB2Dev/nonebot-plugin-ottohzys",
     config=ConfigModel,
     supported_adapters=inherit_supported_adapters("nonebot_plugin_alconna"),
-    extra={"License": "MIT", "Author": "student_2333"},
+    extra={"License": "MIT", "Author": "LgCookie"},
 )
