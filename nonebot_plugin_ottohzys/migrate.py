@@ -25,6 +25,10 @@ def v0_migrate():
     shutil.copytree(OLD_DATA_DIR / "ysddTokens", pack_dir / YSDD_TOKENS_DIRNAME)
     # shutil.copy(OLD_DATA_DIR / "chinglish.json", pack_dir / CHINGLISH_FILENAME)
     shutil.copy(OLD_DATA_DIR / "ysdd.json", pack_dir / YSDD_TOKENS_FILENAME)
+    (pack_dir / "config.json").write_text(
+        ('{\n  "commands": ["ottohzys", "电棍活字印刷", "大电老师活字印刷"]\n}\n'),
+        "u8",
+    )
 
     shutil.rmtree(OLD_DATA_DIR)
 
