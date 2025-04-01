@@ -46,4 +46,4 @@ async def get_online_packs():
     async with AsyncClient(proxy=config.proxy, follow_redirects=True) as cli:
         resp = await cli.get(config.pack_list_url)
         resp.raise_for_status()
-        return type_validate_json(list[OnlinePackInfo], resp.json())
+        return type_validate_json(list[OnlinePackInfo], resp.content)
