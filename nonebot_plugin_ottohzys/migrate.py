@@ -21,8 +21,8 @@ def v0_migrate():
 
     pack_dir = DATA_DIR / "otto"
 
-    shutil.copy(OLD_DATA_DIR / "tokens", pack_dir / TOKENS_DIRNAME)
-    shutil.copy(OLD_DATA_DIR / "ysddTokens", pack_dir / YSDD_TOKENS_DIRNAME)
+    shutil.copytree(OLD_DATA_DIR / "tokens", pack_dir / TOKENS_DIRNAME)
+    shutil.copytree(OLD_DATA_DIR / "ysddTokens", pack_dir / YSDD_TOKENS_DIRNAME)
     # shutil.copy(OLD_DATA_DIR / "chinglish.json", pack_dir / CHINGLISH_FILENAME)
     shutil.copy(OLD_DATA_DIR / "ysdd.json", pack_dir / YSDD_TOKENS_FILENAME)
 
