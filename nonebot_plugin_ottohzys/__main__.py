@@ -162,7 +162,7 @@ async def _(m: AlconnaMatcher):
 @m_cls.assign("~download")
 async def _(
     m: AlconnaMatcher,
-    q_pack: Query[str] = Query("~pack"),
+    q_pack: Query[str] = Query("~download.pack"),
 ):
     if not await is_superuser():
         await m.finish()
