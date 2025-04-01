@@ -1,12 +1,10 @@
 [
   {
     "name": "otto",
-    "description": "电棍 otto 语音包。欧内的手，好汉。",
-    "commands": ["ottohzys", "电棍活字印刷", "大电老师活字印刷"]
+    "description": "电棍 otto 语音包。欧内的手，好汉。"
   },
   {
     "name": "lex-ninja",
-    "description": "蕾忍语音包。吓我一跳我释放忍术！",
-    "commands": ["lexhzys", "蕾忍活字印刷"]
+    "description": "蕾忍语音包。吓我一跳我释放忍术！来源：BV1bxZTYHEyx"
   }
 ]

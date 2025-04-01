@@ -41,7 +41,7 @@ def load_audio(file_path: Path, normalize: bool = True) -> SoundArrayType:
     """读取音频文件"""
 
     with file_path.open("rb") as f:
-        data, sample_rate = cast(tuple[SoundArrayType, int], sf.read(f))
+        data, sample_rate = cast("tuple[SoundArrayType, int]", sf.read(f))
 
     # 双声道转单声道
     if len(data.shape) == 2:

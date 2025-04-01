@@ -91,24 +91,22 @@ def generate_data(
     pitch_multiple: float = 1,
     pause_length: float = 0.25,
 ) -> SoundArrayType:
-    """活字印刷"""
-
     sentence = sentence.lower()
     tokens_list = parse_sentence(pack, sentence, ysdd_mode)
 
     empty_arr: Optional[SoundArrayType] = None
-    audios: list[SoundArrayType] = [
-        (
-            (
-                pack.get_token(token.pron, token.is_ysdd, normalize)
-                if token.pron
-                else None
-            )
-            or empty_arr
-            or (empty_arr := empty_sound_array(pause_length))
-        )
-        for token in tokens_list
-    ]
+
+    def get_token_audio(token: PreProcPron) -> SoundArrayType:
+        nonlocal empty_arr
+        if token.pron and (
+            (audio := pack.get_token(token.pron, token.is_ysdd, normalize)) is not None
+        ):
+            return audio
+        if empty_arr is None:
+            empty_arr = empty_sound_array(pause_length)
+        return empty_arr
+
+    audios: list[SoundArrayType] = [get_token_audio(token) for token in tokens_list]
     processed_au: SoundArrayType = np.concatenate((np.array([]), *audios))
 
     # 音高偏移
