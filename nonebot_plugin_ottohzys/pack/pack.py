@@ -5,15 +5,15 @@ from typing_extensions import TypeAlias
 from cachetools import TTLCache
 from cookit.pyd import type_validate_json
 
-from ..audio import SoundArrayType
 from ..config import SOURCE_RES_DIR
+from .audio import SoundArrayType, find_sound_file, load_audio
 
 WordMapType: TypeAlias = dict[str, str]
 
 CHINGLISH_FILENAME = "chinglish.json"
 YSDD_TOKENS_FILENAME = "ysdd.json"
 TOKENS_DIRNAME = "tokens"
-YSDD_TOKENS_DIRNAME = "ysddTokens"
+YSDD_TOKENS_DIRNAME = "ysdd_tokens"
 
 _default_chinglish_map: Optional[WordMapType] = None
 
@@ -42,18 +42,31 @@ class TokenManager:
             else None
         )
 
-    def get(self, token: str) -> Optional[SoundArrayType]:
-        pass
+    def get(self, token: str, normalize: bool = True) -> Optional[SoundArrayType]:
+        if path := find_sound_file(self.base_path / TOKENS_DIRNAME, token):
+            data = load_audio(path, normalize)
+            if self._cache is not None:
+                self._cache[token] = data
+            return data
+        return None
 
 
 class VoicePack:
     def __init__(self, base_path: Path) -> None:
         self.base_path = base_path
-        self.token_manager = TokenManager(base_path)
-        self.ysdd_token_manager = TokenManager(base_path, 0)
+        self.token_manager = TokenManager(base_path / TOKENS_DIRNAME)
+        self.ysdd_token_manager = TokenManager(base_path / YSDD_TOKENS_DIRNAME, 0)
 
         self._chinglish_map: Optional[WordMapType] = None
         self._ysdd_tokens_map: Optional[WordMapType] = None
+
+    @staticmethod
+    def valid(base_path: Path):
+        return (base_path / TOKENS_DIRNAME).exists()
+
+    @property
+    def name(self) -> str:
+        return self.base_path.name
 
     @property
     def chinglish_map(self) -> WordMapType:
@@ -77,7 +90,12 @@ class VoicePack:
             )
         return self._ysdd_tokens_map
 
-    def get_token(self, token: str, is_ysdd: bool = False) -> Optional[SoundArrayType]:
+    def get_token(
+        self,
+        token: str,
+        is_ysdd: bool = False,
+        normalize: bool = True,
+    ) -> Optional[SoundArrayType]:
         if is_ysdd:
-            return self.ysdd_token_manager.get(token)
-        return self.token_manager.get(token)
+            return self.ysdd_token_manager.get(token, normalize)
+        return self.token_manager.get(token, normalize)

@@ -4,8 +4,8 @@ from io import BytesIO
 from pathlib import Path
 from typing import cast
 
-import anyio
 import numpy as np
+import psola
 import soundfile as sf
 from numpy.typing import NDArray
 
@@ -25,7 +25,7 @@ def find_sound_file(base_dir: Path, base_name: str):
     return None
 
 
-def empty_sound_array(length: int) -> SoundArrayType:
+def empty_sound_array(length: float) -> SoundArrayType:
     return np.zeros(int(length * TARGET_SAMPLE_RATE))
 
 
@@ -37,11 +37,11 @@ def normalize_audio(data: SoundArrayType):
     return data / rms * 0.2
 
 
-async def load_audio(file_path: Path, normalize: bool = True) -> SoundArrayType:
+def load_audio(file_path: Path, normalize: bool = True) -> SoundArrayType:
     """读取音频文件"""
 
-    file = BytesIO(await anyio.Path(file_path).read_bytes())
-    data, sample_rate = cast(tuple[SoundArrayType, int], sf.read(file))
+    with file_path.open("rb") as f:
+        data, sample_rate = cast(tuple[SoundArrayType, int], sf.read(f))
 
     # 双声道转单声道
     if len(data.shape) == 2:
@@ -64,3 +64,41 @@ async def load_audio(file_path: Path, normalize: bool = True) -> SoundArrayType:
         data = normalize_audio(data)
 
     return data
+
+
+def modify_pitch_and_speed(
+    data: SoundArrayType,
+    pitch_multiple: float,
+    speed_multiple: float,
+) -> SoundArrayType:
+    """改变音高和速度"""
+
+    if pitch_multiple == 1 and speed_multiple == 1:
+        # 没有改动的必要，直接返回
+        return data
+
+    # 第一次拉伸
+    original_len = len(data)
+    if speed_multiple / pitch_multiple != 1:
+        # 不改变音高的同时在时间上拉伸（PSOLA）
+        # constant_stretch 过小会导致 bug，因此分两次拉伸
+        data = psola.vocode(
+            data,
+            TARGET_SAMPLE_RATE,
+            constant_stretch=1 / pitch_multiple,
+        )
+        data = psola.vocode(data, TARGET_SAMPLE_RATE, constant_stretch=speed_multiple)
+
+    # 第二次拉伸，以改变音高的方式拉伸回来
+    new_length = int(original_len / speed_multiple)
+    return np.interp(
+        np.array(range(new_length)),
+        np.linspace(0, new_length - 1, len(data)),
+        data,
+    )
+
+
+def save_data(data: SoundArrayType) -> BytesIO:
+    file = BytesIO()
+    sf.write(file, data, TARGET_SAMPLE_RATE, format="wav", subtype="PCM_16")
+    return file

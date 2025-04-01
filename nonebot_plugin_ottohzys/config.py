@@ -12,9 +12,11 @@ SOURCE_RES_DIR = SOURCE_DIR / "res"
 
 AliasConfigModel = get_alias_model(lambda _: "ottohzys_")
 
+DEFAULT_PACK_NAME = "otto"
+
 
 class ConfigModel(AliasConfigModel):
-    default_sound_pack: str = "otto"
+    default_sound_pack: str = DEFAULT_PACK_NAME
 
 
 config: ConfigModel = get_plugin_config(ConfigModel)
