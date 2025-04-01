@@ -121,11 +121,18 @@ plugins = [
 
 ## ⚙️ 配置
 
-暂无
+在 NoneBot2 项目的 `.env` 文件中添加下表中的必填配置
+
+|              配置项               | 必填 |                                                      默认值                                                      |              说明              |
+| :-------------------------------: | :--: | :--------------------------------------------------------------------------------------------------------------: | :----------------------------: |
+|              `PROXY`              |  否  |                                                        无                                                        |       请求使用的代理地址       |
+|     `OTTOHZYS_PACK_LIST_URL`      |  否  | [`...`](https://github.com/lgc-NB2Dev/nonebot-plugin-ottohzys/blob/master/nonebot_plugin_ottohzys/config.py#L19) | 获取在线语音包列表时使用的地址 |
+| `OTTOHZYS_PACK_DOWNLOAD_BASE_URL` |  否  | [`...`](https://github.com/lgc-NB2Dev/nonebot-plugin-ottohzys/blob/master/nonebot_plugin_ottohzys/config.py#L24) |     下载语音包时使用的地址     |
+|      `OTTOHZYS_DEFAULT_PACK`      |  否  |                                                      `otto`                                                      | 默认语音包，如不存在会自动下载 |
 
 ## 🎉 使用
 
-直接使用指令 `ottohzys` 查看帮助
+直接使用指令 `hzys -h` 查看帮助
 
 ## 📞 联系
 
@@ -151,6 +158,10 @@ Telegram：[@lgc2333](https://t.me/lgc2333)
 感谢大家的赞助！你们的赞助将是我继续创作的动力！
 
 ## 📝 更新日志
+
+### 1.0.0
+
+- 重构项目，加入语音包支持
 
 ### 0.2.1
 
