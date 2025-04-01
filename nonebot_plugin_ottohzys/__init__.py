@@ -1,15 +1,18 @@
 # ruff: noqa: E402
 
-from nonebot import get_driver
+import asyncio
+
+from nonebot import get_driver, logger
 from nonebot.plugin import PluginMetadata, inherit_supported_adapters, require
 
 require("nonebot_plugin_localstore")
 require("nonebot_plugin_alconna")
 
 from . import __main__ as __main__
-from .config import ConfigModel
+from .config import DATA_DIR, ConfigModel, config
 from .migrate import v0_migrate
 from .pack import pack_manager
+from .pack.online import download_pack
 
 __version__ = "1.0.0"
 __plugin_meta__ = PluginMetadata(
@@ -29,5 +32,20 @@ driver = get_driver()
 
 @driver.on_startup
 async def _():
-    v0_migrate()
-    pack_manager.reload()
+    async def task():
+        v0_migrate()
+        pack_manager.reload()
+
+        if not pack_manager.get_pack(config.default_pack):
+            logger.info(f"Downloading default voice pack (`{config.default_pack}`)")
+            try:
+                await download_pack(config.default_pack, DATA_DIR / config.default_pack)
+            except Exception:
+                logger.exception(
+                    f"Failed to download voice pack `{config.default_pack}`",
+                )
+            else:
+                logger.success("Downloaded voice pack `{config.default_pack}`")
+                pack_manager.reload()
+
+    asyncio.create_task(task())

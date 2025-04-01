@@ -6,8 +6,8 @@ from nonebot import logger
 
 from .pack import VoicePack
 
-BeforeReloadHook: TypeAlias = Callable[[], Any]
-AfterReloadHook: TypeAlias = Callable[[], Any]
+BeforeReloadHook: TypeAlias = Callable[["VoicePackManager"], Any]
+AfterReloadHook: TypeAlias = Callable[["VoicePackManager"], Any]
 
 
 class VoicePackManager:
@@ -27,7 +27,7 @@ class VoicePackManager:
 
     def reload(self):
         for hook in self.before_reload_hooks:
-            hook()
+            hook(self)
         self.packs.clear()
 
         for pack_path in (
@@ -43,7 +43,7 @@ class VoicePackManager:
                 logger.debug(f"Loaded pack `{pack.name}`")
 
         for hook in self.after_reload_hooks:
-            hook()
+            hook(self)
         logger.success(f"Successfully loaded {len(self.packs)} packs")
 
     def get_pack(self, name: str) -> Optional[VoicePack]:

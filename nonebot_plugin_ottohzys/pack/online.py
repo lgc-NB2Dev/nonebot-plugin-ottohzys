@@ -23,7 +23,7 @@ async def download_pack(pack_name: str, target_dir: Path):
         temp_path = Path(temp_dir)
         temp_pack_path = temp_path / pack_name
 
-        async with AsyncClient(base_url=config.pack_download_base_url, proxy=config.proxy) as cli, cli.stream("GET", f"{pack_name}{PACK_EXT}") as resp:  # fmt: skip
+        async with AsyncClient(base_url=config.pack_download_base_url, proxy=config.proxy, follow_redirects=True) as cli, cli.stream("GET", f"{pack_name}{PACK_EXT}") as resp:  # fmt: skip
             resp.raise_for_status()
             zip_path = temp_path / f"{pack_name}{PACK_EXT}"
             with zip_path.open("wb") as f:
@@ -39,11 +39,11 @@ async def download_pack(pack_name: str, target_dir: Path):
         if target_dir.exists():
             shutil.rmtree(target_dir)
 
-        shutil.move(temp_pack_path, target_dir.parent)
+        shutil.move(temp_pack_path, target_dir)
 
 
 async def get_online_packs():
-    async with AsyncClient(proxy=config.proxy) as cli:
+    async with AsyncClient(proxy=config.proxy, follow_redirects=True) as cli:
         resp = await cli.get(config.pack_list_url)
         resp.raise_for_status()
         return type_validate_json(list[OnlinePackInfo], resp.json())
