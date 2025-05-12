@@ -223,7 +223,8 @@ async def _(
         logger.exception("Failed to generate voice")
         await m.finish("生成语音失败")
 
-    debug.write(voice, "{time}.wav")
+    if debug.enabled:
+        debug.write(voice, "{time}.wav")
 
     await UniMessage.voice(raw=voice).send()
 
