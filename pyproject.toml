@@ -4,20 +4,20 @@ dynamic = ["version"]
 description = "otto!"
 authors = [{ name = "LgCookie", email = "lgc2333@126.com" }]
 dependencies = [
-    "nonebot2>=2.4.2",
-    "nonebot-plugin-alconna>=0.56.2",
+    "nonebot2>=2.4.3",
+    "nonebot-plugin-alconna>=0.59.4",
     "nonebot-plugin-localstore>=0.7.4",
-    "cookit[pydantic,nonebot-alconna,nonebot-localstore]>=0.10.2",
+    "cookit[pydantic,nonebot-alconna,nonebot-localstore]>=0.13.0",
     "soundfile>=0.13.1",
-    "numpy>=2.0.2",
-    "pypinyin>=0.54.0",
+    "numpy>=2.3.2",
+    "pypinyin>=0.55.0",
     "psola>=0.0.1",
-    "anyio>=4.9.0",
+    "anyio>=4.10.0",
     "httpx>=0.28.1",
     "async-lru>=2.0.5",
-    "cachetools>=5.5.2",
+    "cachetools>=6.1.0",
 ]
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.10,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
 
