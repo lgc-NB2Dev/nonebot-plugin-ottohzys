@@ -1,11 +1,9 @@
-from typing import Optional
-
 from arclet.alconna import (
     Alconna,
     Arg,
+    ArgFlag,
     Args,
     CommandMeta,
-    Field,
     Option,
     OptionResult,
     store_true,
@@ -28,11 +26,12 @@ from .pack.online import download_pack, get_online_packs
 alc = Alconna(
     "hzys",
     Args(
-        Arg("sentence", Optional[str], notice="要生成语音的文本"),
+        Arg("sentence", str, notice="要生成语音的文本", flags=[ArgFlag.OPTIONAL]),
     ),
     Option(
         "-p|--pack",
-        Args["pack", str, Field(default=DEFAULT_PACK_NAME)],
+        Args["pack", str],
+        default=OptionResult(args={"pack": DEFAULT_PACK_NAME}),
         help_text="语音包名称",
     ),
     Option(
@@ -55,17 +54,20 @@ alc = Alconna(
     ),
     Option(
         "-s|--speed",
-        Args["speed", float, Field(default=1.0)],
+        Args["speed", float],
+        default=OptionResult(args={"speed": 1.0}),
         help_text="语音速度，范围 >= 0.5，默认 1.0，越小速度越慢",
     ),
     Option(
         "-p|--pitch",
-        Args["pitch", float, Field(default=1.0)],
+        Args["pitch", float],
+        default=OptionResult(args={"pitch": 1.0}),
         help_text="语音音调，范围 0 < pitch <= 2，默认 1.0，越大音调越高",
     ),
     Option(
         "-P|--pause",
-        Args["pause", float, Field(default=0.25)],
+        Args["pause", float],
+        default=OptionResult(args={"pause": 0.25}),
         help_text="空格等字符的停顿时间，单位秒，默认 0.25",
     ),
     Option(
@@ -99,7 +101,7 @@ alc = Alconna(
     ),
     meta=CommandMeta(
         "活字印刷",
-        usage=(f'hzys -p {config.default_pack} "大家好啊 我是电棍"\nhzys -p -Ly'),
+        usage=f'hzys -p {config.default_pack} "大家好啊 我是电棍"\nhzys -p -Ly',
     ),
 )
 m_cls = on_alconna(
@@ -188,7 +190,7 @@ async def _(
 @m_cls.handle()
 async def _(
     m: AlconnaMatcher,
-    q_sentence: Query[Optional[str]] = Query("sentence", None),
+    q_sentence: Query[str | None] = Query("sentence", None),
     q_pack: Query[str] = Query("~pack"),
     q_reverse: Query[bool] = Query("~reverse.value"),
     q_no_ysdd: Query[bool] = Query("~no-ysdd.value"),

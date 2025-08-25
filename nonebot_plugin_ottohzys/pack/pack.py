@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
-from typing import Optional
-from typing_extensions import TypeAlias
+from typing import TypeAlias
 
 from cachetools import TTLCache
 from cookit.pyd import type_validate_json
@@ -20,7 +19,7 @@ YSDD_TOKENS_FILENAME = "ysdd.json"
 TOKENS_DIRNAME = "tokens"
 YSDD_TOKENS_DIRNAME = "ysdd_tokens"
 
-_default_chinglish_map: Optional[TokenMapType] = None
+_default_chinglish_map: TokenMapType | None = None
 
 
 def load_default_chinglish_map() -> TokenMapType:
@@ -41,7 +40,7 @@ class TokenManager:
     def __init__(
         self,
         base_path: Path,
-        max_size: Optional[int] = 32,
+        max_size: int | None = 32,
         ttl: int = 300,
     ) -> None:
         self.base_path = base_path
@@ -51,7 +50,7 @@ class TokenManager:
             else None
         )
 
-    def get(self, token: str, normalize: bool = True) -> Optional[SoundArrayType]:
+    def get(self, token: str, normalize: bool = True) -> SoundArrayType | None:
         if path := find_sound_file(self.base_path, token):
             data = load_audio(path, normalize)
             if self._cache is not None:
@@ -67,8 +66,8 @@ class VoicePack:
         self.token_manager = TokenManager(base_path / TOKENS_DIRNAME)
         self.ysdd_token_manager = TokenManager(base_path / YSDD_TOKENS_DIRNAME, 0)
 
-        self._chinglish_map: Optional[TokenMapType] = None
-        self._ysdd_tokens_map: Optional[YsddTokenMapType] = None
+        self._chinglish_map: TokenMapType | None = None
+        self._ysdd_tokens_map: YsddTokenMapType | None = None
 
     @staticmethod
     def valid(base_path: Path):
@@ -118,7 +117,7 @@ class VoicePack:
         token: str,
         is_ysdd: bool = False,
         normalize: bool = True,
-    ) -> Optional[SoundArrayType]:
+    ) -> SoundArrayType | None:
         if is_ysdd:
             return self.ysdd_token_manager.get(token, normalize)
         return self.token_manager.get(token, normalize)

@@ -2,14 +2,14 @@
 
 from io import BytesIO
 from pathlib import Path
-from typing import cast
+from typing import TypeAlias, cast
 
 import numpy as np
 import psola
 import soundfile as sf
 from numpy.typing import NDArray
 
-SoundArrayType = NDArray[np.float64]
+SoundArrayType: TypeAlias = NDArray[np.float64]
 
 TARGET_SAMPLE_RATE = 44100
 """目标采样率"""

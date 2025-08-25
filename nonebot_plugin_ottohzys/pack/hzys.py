@@ -1,7 +1,6 @@
 # Original by: https://github.com/CwavGuy/HUOZI_aolianfeiallin.top/blob/main/huoZiYinShua.py
 
 from dataclasses import dataclass
-from typing import Optional
 
 import numpy as np
 from pypinyin import lazy_pinyin
@@ -12,7 +11,7 @@ from .pack import VoicePack
 
 @dataclass
 class PreProcPron:
-    pron: Optional[str]
+    pron: str | None
     is_pinyin: bool = False
     is_ysdd: bool = False
 
@@ -94,7 +93,7 @@ def generate_data(
     sentence = sentence.lower()
     tokens_list = parse_sentence(pack, sentence, ysdd_mode)
 
-    empty_arr: Optional[SoundArrayType] = None
+    empty_arr: SoundArrayType | None = None
 
     def get_token_audio(token: PreProcPron) -> SoundArrayType:
         nonlocal empty_arr

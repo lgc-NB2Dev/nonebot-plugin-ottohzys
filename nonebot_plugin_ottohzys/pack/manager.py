@@ -1,6 +1,6 @@
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable, Optional
-from typing_extensions import TypeAlias
+from typing import Any, TypeAlias
 
 from nonebot import logger
 
@@ -46,5 +46,5 @@ class VoicePackManager:
             hook(self)
         logger.success(f"Successfully loaded {len(self.packs)} packs")
 
-    def get_pack(self, name: str) -> Optional[VoicePack]:
+    def get_pack(self, name: str) -> VoicePack | None:
         return next((x for x in self.packs if x.name == name), None)
