@@ -14,7 +14,7 @@ from .migrate import v0_migrate
 from .pack import pack_manager
 from .pack.online import download_pack
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __plugin_meta__ = PluginMetadata(
     name="活字印刷",
     description="大家好啊，今天来点大家想看的东西",
